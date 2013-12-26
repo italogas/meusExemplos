@@ -12,14 +12,16 @@ public class FileMatch {
 	private Formatter output;
 	private Formatter log;
 	
-	public void openReadFile(){
+	public void openRegisterFile(){
 		try {
 			input = new Scanner(new File("oldmast.txt"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Erro ao abrir arquivo. ");
 			System.exit(1);
 		}
-		
+	}
+	
+	public void openTransctionsRegisterFile(){
 		try {
 			input2 = new Scanner(new File("trans.txt"));
 		} catch (FileNotFoundException e) {
@@ -29,13 +31,16 @@ public class FileMatch {
 	    
 	}
 	
-	public void openWriteFile(){
+	public void createNewRegisterFile(){
 		try {
 			output = new Formatter(new File("newmast.txt"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Erro ao abrir arquivo. ");
 			System.exit(1);
 		}
+	}
+	
+	public void createLogFile(){
 		try {
 			log = new Formatter(new File("log.txt"));
 		} catch (FileNotFoundException e) {
@@ -56,17 +61,6 @@ public class FileMatch {
 			
 			TransactionRecord transRec = new TransactionRecord();
 			
-			try {
-				input2.hasNext();
-			} catch (IllegalStateException e) {
-				try {
-					input2 = new Scanner(new File("trans.txt"));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			
 			while(input2.hasNext()){
 				transRec.setAccount(input2.nextInt());
 				transRec.setAmount(input2.nextDouble());
@@ -76,56 +70,62 @@ public class FileMatch {
 				}
 			}
 			
-            output.format( "%d %s %s %.2f\n", accRec.getAccount(), 
+			output.format( "%d %s %s %.2f\n", accRec.getAccount(), 
             		accRec.getFirstName(), accRec.getLastName(),
                     accRec.getBalance() );
-            
-            input2.close();
-			
-		}
-		
-		try {
-			input2.hasNext();
-		} catch (IllegalStateException e) {
 			try {
 				input2 = new Scanner(new File("trans.txt"));
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 			}
 		}
 		
-		if(input2.hasNext()){
-			TransactionRecord transRec = new TransactionRecord();
-			while(input2.hasNext()){
-				transRec.setAccount(input2.nextInt());
-				transRec.setAmount(input2.nextDouble());
-                
-	            log.format( "Unmatched transction record for account number: %d\n", 
-	            		transRec.getAccount());
+	}
+	
+	public void computeLogInfo(){
+		TransactionRecord t = new TransactionRecord();
+		AccountRecord acc = new AccountRecord();
+		while(input2.hasNext()){
+			t.setAccount(input2.nextInt());
+			t.setAmount(input2.nextDouble());
+			while(input.hasNext()){
+				acc.setAccount(input.nextInt());
+				acc.setFirstName(input.next());
+				acc.setLastName(input.next());
+				acc.setBalance(input.nextDouble());
+				if(acc.getAccount() == t.getAccount()){
+				    break;
+				}
 			}
+			if(acc.getAccount() == t.getAccount()){
+			    break;
+			}
+			
+			log.format( "Unmatched transction record for account number: %d\n", t.getAccount());
 		}
 	}
 	
-	public void closeReadFile(){
+	public void closeRegisterFile(){
 		if(input!=null){
 			input.close();
 		}
+	}
+	
+	public void closeTransctionsRegisterFile(){
 		if(input2!=null){
 			input2.close();
 		}
-
 	}
 	
-	public void closeWriteFile(){
+	public void closeNewRegisterFile(){
 		if(output!=null){
 			output.close();
 		}
+	}
+	
+	public void closeLogFile(){
 		if(log!=null){
 			log.close();
 		}
 	}
-	
-	
-
 }

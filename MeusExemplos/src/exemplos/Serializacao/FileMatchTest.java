@@ -7,11 +7,16 @@ public class FileMatchTest {
 	 */
 	public static void main(String[] args) {
         FileMatch fileMatch = new FileMatch();
-        fileMatch.openReadFile();
-        fileMatch.openWriteFile();
+        fileMatch.openRegisterFile();
+        fileMatch.openTransctionsRegisterFile();
+        fileMatch.createNewRegisterFile();
+        fileMatch.createLogFile();
         fileMatch.computeRecords();
-        fileMatch.closeReadFile();
-        fileMatch.closeWriteFile();
+        fileMatch.computeLogInfo();
+        fileMatch.closeRegisterFile();
+        fileMatch.closeTransctionsRegisterFile();
+        fileMatch.closeNewRegisterFile();
+        fileMatch.closeLogFile();
 	}
 
 }
